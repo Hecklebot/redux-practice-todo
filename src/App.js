@@ -4,6 +4,16 @@ import TodoListTemplate from './components/TodoListTemplate';
 import TodoItemList from './components/TodoItemList';
 import Form from './components/Form';
 
+const mapStateToProps = state => {
+  console.log('ccc', state);
+  const { id, input, todos } = state;
+  return {
+    id,
+    input,
+    todos,
+  };
+};
+
 class App extends Component {
   id = 3; // 이미 0,1,2 가 존재하므로 3으로 설정
 
@@ -20,6 +30,7 @@ class App extends Component {
   }
 
   handleChange = e => {
+    console.log(this.props);
     this.setState({
       input: e.target.value, // input 의 다음 바뀔 값
     });
@@ -93,14 +104,6 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  console.log('ccc', state);
-  const { id, input, todos } = state;
-  return {
-    id,
-    input,
-    todos,
-  };
-};
+console.log(this.props);
 
 export default connect(mapStateToProps)(App);
