@@ -23,6 +23,9 @@ const initState = {
 };
 
 export default function Reducer(state = initState, action) {
+  const index = state.todos.findIndex(todo => todo.id === action.payload);
+  const selected = state.todos[index];
+  const nextTodos = [...state.todos];
   switch (action.type) {
     case ADD_ITEM:
       id += 1;
@@ -43,9 +46,13 @@ export default function Reducer(state = initState, action) {
       };
 
     case TOGGLE_ITEM:
-      console.log(state.todos[action.payload].text);
+      nextTodos[index] = {
+        ...selected,
+        checked: !selected.checked,
+      };
+
       return {
-        ...state,
+        todos: nextTodos,
       };
 
     case REMOVE_ITEM:
