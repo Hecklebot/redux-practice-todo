@@ -38,7 +38,6 @@ export default function Reducer(state = initState, action) {
           checked: false,
         }),
       };
-
     case KEY_INPUT:
       return {
         ...state,
