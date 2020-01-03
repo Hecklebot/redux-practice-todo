@@ -1,39 +1,42 @@
-/* eslint-disable no-debugger */
 import { createAction } from 'redux-actions';
 
+const APP_START = 'APP_START';
 const ADD_ITEM = 'ADD_ITEM'; // 아이템 추가
 const KEY_INPUT = 'KEY_INPUT'; // 입력받은 키 input에 넣기
 const TOGGLE_ITEM = 'TOGGLE_ITEM';
 const REMOVE_ITEM = 'REMOVE_ITEM';
 
+export const appStart = createAction(APP_START);
 export const addItem = createAction(ADD_ITEM, text => text);
 export const keyInput = createAction(KEY_INPUT, text => text);
 export const removeItem = createAction(REMOVE_ITEM, id => id);
 export const toggleItem = createAction(TOGGLE_ITEM, id => id);
 
-let id = 3;
+let id = 0;
 const initState = {
   input: '',
-  todos: [
-    { id: 0, text: '리액트 소개', checked: false },
-    { id: 1, text: 'JSX 사용해보기', checked: true },
-    { id: 2, text: '라이프 사이클 이해하기', checked: false },
-    { id: 3, text: '테스트', checked: false },
-  ],
+  todos: [],
 };
 
 export default function Reducer(state = initState, action) {
   const index = state.todos.findIndex(todo => todo.id === action.payload);
   const selected = state.todos[index];
   const nextTodos = [...state.todos];
+
   switch (action.type) {
+    case APP_START:
+      id = action.payload.length;
+      return {
+        ...state,
+        id,
+        todos: action.payload,
+      };
     case ADD_ITEM:
       id += 1;
       return {
         ...state,
         input: '',
         todos: state.todos.concat({
-          id,
           text: action.payload,
           checked: false,
         }),

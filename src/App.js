@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import TodoListTemplate from './components/TodoListTemplate';
 import TodoItemList from './components/TodoItemList';
 import Form from './components/Form';
-import { addItem, keyInput, removeItem, toggleItem } from './store/modules/Reducer';
+import { appStart, addItem, keyInput, removeItem, toggleItem } from './store/modules/Reducer';
 
 const mapStateToProps = state => {
-  const { id, input, todos } = state;
+  const { input, todos } = state;
   return {
-    id,
     input,
     todos,
   };
 };
 
+let isLoading = true;
+
 class App extends Component {
+  async componentDidMount() {
+    const data = await axios.get('https://my-react-todo-12824.firebaseio.com/todos.json');
+    isLoading = false;
+    this.props.appStart(data.data);
+  }
+
   handleCreate = () => {
     this.props.addItem(this.props.input);
   };
@@ -45,27 +53,38 @@ class App extends Component {
     const { input, todos } = this.props;
     const { handleCreate, handleToggle, handleRemove, handleChange, handleKeyPress } = this;
 
-    return (
+    return isLoading ? (
+      <div></div>
+    ) : (
       <div>
         <TodoListTemplate form={<Form value={input} onKeyPress={handleKeyPress} onChange={handleChange} onCreate={handleCreate} />}>
           <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove} />
         </TodoListTemplate>
       </div>
     );
+
+    // return (
+    //   <div>
+    //     <TodoListTemplate form={<Form value={input} onKeyPress={handleKeyPress} onChange={handleChange} onCreate={handleCreate} />}>
+    //       <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove} />
+    //     </TodoListTemplate>
+    //   </div>
+    // );
   }
 }
 
 App.propTypes = {
   input: PropTypes.string,
   todos: PropTypes.array,
+  appStart: PropTypes.func,
   addItem: PropTypes.func,
   keyInput: PropTypes.func,
   removeItem: PropTypes.func,
   toggleItem: PropTypes.func,
 };
 
-// console.log(this.props);
 const mapDispatchToProps = dispatch => ({
+  appStart: data => dispatch(appStart(data)),
   addItem: text => dispatch(addItem(text)),
   keyInput: text => dispatch(keyInput(text)),
   removeItem: id => dispatch(removeItem(id)),
