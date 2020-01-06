@@ -2,24 +2,29 @@ import { put, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
 
 function* addData(data) {
-  const id = yield axios.get('https://my-react-todo-12824.firebaseio.com/todos.json');
+  const getData = yield axios.get('https://my-react-todo-12824.firebaseio.com/todos.json');
   const inputData = {
-    id: yield id.data.length,
+    id: getData.data[getData.data.length - 1].id + 1, // 마지막 원소의 id값 +1로 바꾸기
     text: data.payload,
     checked: false,
   };
-  yield axios.put(`https://my-react-todo-12824.firebaseio.com/todos/${id.data.length}.json`, inputData);
-  yield put({ type: 'ADD_DATA', payload: data });
+  yield axios.put(`https://my-react-todo-12824.firebaseio.com/todos/${getData.data.length}.json`, inputData);
 }
 
 function* toggleData(id) {
-  yield console.log(id);
-  yield axios.update(`https://my-react-todo-12824.firebaseio.com/todos/${id.payload}/checked.json`, !true);
+  const getData = yield axios.get(`https://my-react-todo-12824.firebaseio.com/todos.json`);
+  const index = getData.data.findIndex(item => item.id === id.payload);
+  getData.data[index].checked = !getData.data[index].checked;
+  yield axios.put(`https://my-react-todo-12824.firebaseio.com/todos.json`, getData.data);
   yield put({ type: 'TOGGLE_DATA', payload: id });
 }
 
 function* removeData(id) {
-  yield axios.delete(`https://my-react-todo-12824.firebaseio.com/todos/${id.payload}.json`);
+  const data = yield axios.get('https://my-react-todo-12824.firebaseio.com/todos.json');
+  yield axios.put(
+    `https://my-react-todo-12824.firebaseio.com/todos.json`,
+    data.data.filter(n => n.id !== id.payload),
+  );
   yield put({ type: 'REMOVE_DATA', payload: id });
 }
 
