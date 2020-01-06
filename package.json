@@ -39,5 +39,5 @@
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1"
   },
-  "homepage": "http://hecklebot.github.io/react-todo"
+  "homepage": "http://hecklebot.github.io/redux-practice-todo"
 }

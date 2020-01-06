@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './TodoItem.css';
 import OpengraphReactComponent from 'opengraph-react';
+import PropTypes from 'prop-types';
 
 class TodoItem extends Component {
   shouldComponentUpdate(nextProps) {
@@ -54,5 +55,11 @@ class TodoItem extends Component {
     );
   }
 }
-
+TodoItem.propTypes = {
+  text: PropTypes.string,
+  checked: PropTypes.bool,
+  id: PropTypes.number,
+  onToggle: PropTypes.func,
+  onRemove: PropTypes.func,
+};
 export default TodoItem;

@@ -20,10 +20,10 @@ function* toggleData(id) {
 }
 
 function* removeData(id) {
-  const data = yield axios.get('https://my-react-todo-12824.firebaseio.com/todos.json');
+  const getData = yield axios.get('https://my-react-todo-12824.firebaseio.com/todos.json');
   yield axios.put(
     `https://my-react-todo-12824.firebaseio.com/todos.json`,
-    data.data.filter(n => n.id !== id.payload),
+    getData.data.filter(n => n.id !== id.payload),
   );
   yield put({ type: 'REMOVE_DATA', payload: id });
 }
