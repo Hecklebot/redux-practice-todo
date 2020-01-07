@@ -12,4 +12,4 @@ TodoItemList.propTypes = {
   onToggle: PropTypes.func,
   onRemove: PropTypes.func,
 };
-export default TodoItemList;
+export default React.memo(TodoItemList);
